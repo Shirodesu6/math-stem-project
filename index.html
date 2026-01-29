@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>MATH STEM PROJECT</title>
+
+<style>
+body{
+  margin:0;
+  background:#020617;
+  color:white;
+  font-family:Arial;
+  overflow-x:hidden;
+}
+
+/* INTRO SCREEN */
+
+#intro{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  z-index:999;
+  animation:fadeOut 2s 2.5s forwards;
+}
+
+#intro h1{
+  font-size:42px;
+  color:cyan;
+  text-shadow:0 0 20px cyan;
+  animation:zoom 2s ease;
+}
+
+@keyframes zoom{
+  from{transform:scale(0.5);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+@keyframes fadeOut{
+  to{opacity:0;visibility:hidden}
+}
+
+/* PARTICLES */
+
+#particles{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+
+/* MENU */
+
+.menu{
+  position:fixed;
+  top:0;
+  width:100%;
+  background:black;
+  text-align:center;
+  padding:10px;
+  z-index:10;
+}
+
+.menu button{
+  background:black;
+  color:cyan;
+  border:1px solid cyan;
+  padding:10px 16px;
+  margin:5px;
+  border-radius:8px;
+  cursor:pointer;
+  box-shadow:0 0 10px cyan;
+  transition:0.3s;
+}
+
+.menu button:hover{
+  background:cyan;
+  color:black;
+}
+
+/* PAGE */
+
+.page{
+  display:none;
+  min-height:100vh;
+  padding:100px 40px;
+  text-align:center;
+  opacity:0;
+  transform:scale(0.98);
+  transition:0.6s ease;
+}
+
+.page.active{
+  display:block;
+  opacity:1;
+  transform:scale(1);
+}
+
+/* TEXT */
+
+.neon{
+  color:#00ffff;
+  text-shadow:0 0 15px cyan;
+}
+
+.slogan{
+  color:#ffcc00;
+  font-size:20px;
+  text-shadow:0 0 10px orange;
+}
+
+/* TEAM */
+
+.team{
+  display:flex;
+  justify-content:center;
+  gap:50px;
+  margin-top:30px;
+}
+
+.member{
+  background:#0b0f2a;
+  padding:25px;
+  border-radius:15px;
+  width:260px;
+  box-shadow:0 0 20px cyan;
+  transition:0.4s;
+}
+
+.member:hover{
+  transform:translateY(-10px) scale(1.08);
+  box-shadow:0 0 60px cyan;
+}
+
+.avatar{
+  width:80px;
+  height:80px;
+  margin:auto;
+  border-radius:50%;
+  background:linear-gradient(45deg,#00ffff,#0044ff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+/* TOPIC */
+
+.topic{
+  display:flex;
+  align-items:center;
+  gap:30px;
+  background:#0b0f2a;
+  padding:25px;
+  margin:30px 0;
+  border-radius:15px;
+  box-shadow:0 0 20px cyan;
+  transition:0.4s;
+  opacity:0;
+  transform:translateY(40px);
+}
+
+.topic.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.topic:hover{
+  transform:translateY(-10px) scale(1.03);
+  box-shadow:0 0 50px cyan;
+}
+
+.topic img{
+  width:260px;
+  border-radius:12px;
+}
+
+.topic.reverse{
+  flex-direction:row-reverse;
+}
+
+.text{
+  text-align:left;
+}
+
+</style>
+<style>
+.endBtn{
+  background:black;
+  color:cyan;
+  border:1px solid cyan;
+  padding:14px 22px;
+  font-size:18px;
+  border-radius:10px;
+  cursor:pointer;
+  box-shadow:0 0 10px cyan;
+  transition:0.3s;
+  margin-top:40px;
+}
+
+.endBtn:hover{
+  background:cyan;
+  color:black;
+  transform:scale(1.1);
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div id="intro">
+<h1 id="typing"></h1>
+</div>
+
+<canvas id="particles"></canvas>
+
+<!-- MENU -->
+<div class="menu">
+<button onclick="showPage('gioithieu')">Giới thiệu</button>
+<button onclick="showPage('hoctoan')">Học Toán</button>
+<button onclick="goPage('ungdung.html')">Ứng dụng Toán</button>
+<button onclick="location.href='ending.html'">Kết thúc</button>
+
+
+<a href="ahhh.html">
+  <button>🎮 Chơi Quiz Toán</button>
+</a>
+
+</div>
+
+<!-- GIỚI THIỆU -->
+<section id="gioithieu" class="page active">
+
+<h1 class="neon">MATH STEM PROJECT</h1>
+
+<p class="slogan">
+"Toán học là ngôn ngữ của vũ trụ — hiểu Toán là hiểu tương lai."
+</p>
+
+<h2 class="neon">Thành viên nhóm</h2>
+
+<div class="team">
+
+<div class="member">
+<div class="avatar">K</div>
+<h3>Nguyễn Quốc Khánh</h3>
+</div>
+
+<div class="member">
+<div class="avatar">N</div>
+<h3>Phạm Quang Nghị</h3>
+</div>
+
+</div>
+
+</section>
+
+<!-- HỌC TOÁN -->
+<section id="hoctoan" class="page">
+
+<h1 class="neon">📚 Góc Học Toán</h1>
+
+<div class="topic">
+<img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb">
+<div class="text">
+<h3 class="neon">Toán học là gì?</h3>
+<p>
+Toán học là ngành khoa học nghiên cứu về số,
+cấu trúc, không gian và quy luật logic.
+Nó giúp con người mô tả thế giới một cách chính xác.
+Mọi công nghệ hiện đại — từ điện thoại,
+máy tính đến AI — đều dựa trên Toán học.
+Toán không chỉ là phép tính,
+mà là ngôn ngữ của tư duy khoa học.
+</p>
+</div>
+</div>
+
+<div class="topic reverse">
+<img src="https://images.unsplash.com/photo-1509228627152-72ae9ae6848d">
+<div class="text">
+<h3 class="neon">Tại sao cần học Toán?</h3>
+<p>
+Học Toán giúp rèn luyện tư duy logic,
+khả năng phân tích và giải quyết vấn đề.
+Toán giúp chúng ta suy nghĩ rõ ràng,
+ra quyết định chính xác và làm việc hiệu quả.
+Dù theo ngành nghề nào,
+Toán học vẫn luôn là nền tảng quan trọng.
+</p>
+</div>
+</div>
+
+<div class="topic">
+<img src="https://images.unsplash.com/photo-1596495577886-d920f1fb7238">
+<div class="text">
+<h3 class="neon">Nguyên hàm & Tích phân</h3>
+<p>
+Nguyên hàm là quá trình tìm hàm gốc
+từ đạo hàm của nó.
+Tích phân giúp tính diện tích,
+quãng đường, thể tích và nhiều đại lượng vật lý.
+Đây là công cụ quan trọng trong
+vật lý, kỹ thuật và khoa học máy tính.
+Nguyên hàm & tích phân là nền tảng
+của giải tích hiện đại.
+</p>
+</div>
+</div>
+
+<div class="topic reverse">
+<img src="https://images.unsplash.com/photo-1523961131990-5ea7c61b2107">
+<div class="text">
+<h3 class="neon">Ngành nghề cần Toán học</h3>
+<p>
+Kỹ sư, lập trình viên, bác sĩ,
+nhà khoa học dữ liệu,
+kiến trúc sư, tài chính,
+AI và robot —
+tất cả đều sử dụng Toán học mỗi ngày.
+Toán mở ra cánh cửa cho
+những nghề nghiệp của tương lai.
+</p>
+</div>
+</div>
+
+</section>
+
+
+<script>
+
+/* PAGE SWITCH */
+function showPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  setTimeout(()=>document.getElementById(id).classList.add("active"),200);
+}
+
+/* TYPING INTRO */
+const text="WELCOME TO MATH STEM PROJECT";
+let i=0;
+function type(){
+  if(i<text.length){
+    document.getElementById("typing").innerHTML+=text.charAt(i);
+    i++;
+    setTimeout(type,60);
+  }
+}
+type();
+
+/* PARTICLES */
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+function resize(){
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+}
+resize();
+window.onresize=resize;
+
+let particles=[];
+for(let i=0;i<120;i++){
+  particles.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*2+1,
+    dx:(Math.random()-0.5)*0.6,
+    dy:(Math.random()-0.5)*0.6
+  });
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="cyan";
+  particles.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+    p.x+=p.dx;
+    p.y+=p.dy;
+    if(p.x<0||p.x>canvas.width) p.dx*=-1;
+    if(p.y<0||p.y>canvas.height) p.dy*=-1;
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* SCROLL REVEAL */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add("show");
+  });
+});
+
+document.querySelectorAll(".topic").forEach(el=>observer.observe(el));
+function goPage(url){
+  document.body.style.opacity="0";
+  document.body.style.transition="0.6s";
+  setTimeout(()=>window.location=url,600);
+}
+
+
+</script>
+
+</body>
+</html>

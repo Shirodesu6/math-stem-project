@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Kết thúc Project</title>
+
+<style>
+body{
+  margin:0;
+  background:#020617;
+  color:white;
+  font-family:Arial;
+  overflow:hidden;
+  text-align:center;
+}
+
+/* INTRO */
+
+#intro{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+  animation:fadeOut 2s 3s forwards;
+}
+
+#intro h1{
+  font-size:48px;
+  color:cyan;
+  text-shadow:0 0 25px cyan;
+  animation:zoom 2s ease;
+}
+
+@keyframes zoom{
+  from{transform:scale(0.5);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+@keyframes fadeOut{
+  to{opacity:0;visibility:hidden}
+}
+
+/* GALAXY */
+
+canvas{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+
+/* CONTENT */
+
+.container{
+  padding:120px 30px;
+  max-width:900px;
+  margin:auto;
+}
+
+.neon{
+  color:#00ffff;
+  text-shadow:0 0 20px cyan;
+}
+
+.line{
+  opacity:0;
+  transform:translateY(30px);
+  transition:1s ease;
+  font-size:24px;
+  margin:18px 0;
+}
+
+.line.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* QUOTE */
+
+.quote{
+  font-size:28px;
+  color:#ffcc00;
+  text-shadow:0 0 15px orange;
+  margin-top:40px;
+}
+
+/* BUTTON */
+
+.back{
+  margin-top:60px;
+  background:black;
+  color:cyan;
+  border:1px solid cyan;
+  padding:16px 26px;
+  font-size:18px;
+  border-radius:10px;
+  cursor:pointer;
+  box-shadow:0 0 12px cyan;
+  transition:0.3s;
+}
+
+.back:hover{
+  background:cyan;
+  color:black;
+  transform:scale(1.1);
+}
+</style>
+</head>
+
+<body>
+
+<div id="intro">
+<h1 id="typing"></h1>
+</div>
+
+<canvas id="galaxy"></canvas>
+
+<div class="container">
+
+<h1 class="neon">🌌 Toán học & Tương lai</h1>
+
+<p class="line">Toán học là nền tảng của mọi công nghệ hiện đại.</p>
+<p class="line">AI, robot, không gian và khoa học đều bắt đầu từ những con số.</p>
+<p class="line">Mỗi công thức bạn học hôm nay</p>
+<p class="line">có thể tạo nên thế giới của ngày mai.</p>
+
+<div class="quote line">
+“Học Toán hôm nay — tạo tương lai ngày mai.”
+</div>
+
+<p class="line">Nhóm xin chân thành cảm ơn thầy cô và các bạn đã lắng nghe.</p>
+<p class="line">Hy vọng project mang lại cảm hứng học tập.</p>
+
+<button class="back" onclick="location.href='index.html'">
+⬅ Quay về trang chính
+</button>
+
+</div>
+
+<script>
+
+/* INTRO TYPE */
+
+const text="CẢM ƠN VÌ ĐÃ XEM PROJECT";
+let i=0;
+function type(){
+  if(i<text.length){
+    typing.innerHTML+=text.charAt(i);
+    i++;
+    setTimeout(type,70);
+  }
+}
+type();
+
+/* GALAXY EFFECT */
+
+const canvas=document.getElementById("galaxy");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+}
+resize();
+onresize=resize;
+
+let stars=[];
+for(let i=0;i<220;i++){
+  stars.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*2,
+    speed:Math.random()*1+0.2
+  });
+}
+
+function draw(){
+  ctx.fillStyle="rgba(2,6,23,0.35)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  stars.forEach(s=>{
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle="cyan";
+    ctx.fill();
+
+    s.y+=s.speed;
+    if(s.y>canvas.height){
+      s.y=0;
+      s.x=Math.random()*canvas.width;
+    }
+  });
+
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* LINE ANIMATION */
+
+const lines=document.querySelectorAll(".line");
+lines.forEach((l,i)=>{
+  setTimeout(()=>l.classList.add("show"),1500+i*500);
+});
+
+</script>
+
+</body>
+</html>

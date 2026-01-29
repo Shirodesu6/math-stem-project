@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Quiz Toán 12 - Ultimate Cat</title>
+
+<style>
+body{
+  margin:0;
+  background:#020617;
+  font-family:Arial;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  overflow:hidden;
+}
+
+/* SCREEN SHAKE */
+
+.shake{
+  animation:shake 0.4s;
+}
+
+@keyframes shake{
+  0%{transform:translate(0)}
+  25%{transform:translate(-10px,6px)}
+  50%{transform:translate(10px,-6px)}
+  75%{transform:translate(-8px,4px)}
+  100%{transform:translate(0)}
+}
+
+canvas{position:fixed; inset:0; z-index:-1;}
+
+#quizBox{
+  background:#0b0f2a;
+  padding:30px;
+  width:520px;
+  border-radius:20px;
+  box-shadow:0 0 40px cyan;
+  text-align:center;
+  animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:scale(0.9)}
+  to{opacity:1; transform:scale(1)}
+}
+
+.neon{
+  color:#00ffff;
+  text-shadow:0 0 20px cyan;
+}
+
+/* CAT */
+
+#topBar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+  position:relative;
+}
+
+#cat{
+  font-size:42px;
+  position:relative;
+  animation:catRun 3s infinite linear;
+}
+
+@keyframes catRun{
+  0%{left:-10px}
+  50%{left:10px}
+  100%{left:-10px}
+}
+
+.jump{animation:jump 0.6s}
+@keyframes jump{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-25px)}
+  100%{transform:translateY(0)}
+}
+
+.comboJump{animation:comboJump 0.3s infinite}
+@keyframes comboJump{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-35px)}
+  100%{transform:translateY(0)}
+}
+
+.sad{filter:grayscale(1)}
+
+/* CAT SPEECH */
+
+#speech{
+  position:absolute;
+  right:0;
+  top:-28px;
+  background:black;
+  padding:6px 10px;
+  border-radius:10px;
+  box-shadow:0 0 10px cyan;
+  font-size:14px;
+  opacity:0;
+  transition:0.3s;
+}
+
+/* BUTTON */
+
+.quizBtn{
+  display:block;
+  width:100%;
+  margin:10px 0;
+  padding:14px;
+  background:black;
+  color:cyan;
+  border:1px solid cyan;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:16px;
+  transition:0.3s;
+  box-shadow:0 0 10px cyan;
+}
+
+.quizBtn:hover{
+  background:cyan;
+  color:black;
+  transform:scale(1.05);
+}
+
+.correct{background:#00ff88!important;color:black!important}
+.wrong{background:#ff3b3b!important;color:white!important}
+
+/* WIN EFFECT */
+
+.win{
+  animation:winGlow 1s infinite alternate;
+}
+
+@keyframes winGlow{
+  from{box-shadow:0 0 20px cyan}
+  to{box-shadow:0 0 80px #00ffcc}
+}
+/* BACK BUTTON */
+
+#backBtn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:black;
+  color:cyan;
+  border:1px solid cyan;
+  padding:12px 18px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:bold;
+  box-shadow:0 0 15px cyan;
+  transition:0.3s;
+  z-index:99;
+  animation:float 2s infinite ease-in-out;
+}
+
+#backBtn:hover{
+  background:cyan;
+  color:black;
+  transform:scale(1.1);
+  box-shadow:0 0 40px cyan;
+}
+
+/* floating effect */
+
+@keyframes float{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+  100%{transform:translateY(0)}
+}
+
+/* FADE TRANSITION */
+
+#fade{
+  position:fixed;
+  inset:0;
+  background:black;
+  opacity:0;
+  pointer-events:none;
+  transition:0.6s;
+  z-index:200;
+}
+
+#fade.show{
+  opacity:1;
+}
+/* QUIZ INTRO */
+
+#introQuiz{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+  animation:quizFade 2s 3s forwards;
+}
+
+#introQuiz h1{
+  color:cyan;
+  font-size:38px;
+  text-shadow:0 0 25px cyan;
+  animation:zoomIntro 1.5s ease;
+}
+
+@keyframes zoomIntro{
+  from{transform:scale(0.6);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+@keyframes quizFade{
+  to{opacity:0;visibility:hidden}
+}
+
+</style>
+</head>
+
+<body>
+<div id="introQuiz">
+  <h1 id="introText"></h1>
+</div>
+
+<a href="aa.html" id="backBtn">⬅ Quay lại</a>
+<div id="fade"></div>
+
+
+<canvas id="bg"></canvas>
+<canvas id="fw"></canvas>
+
+<div id="quizBox"></div>
+
+<audio id="good" src="https://cdn.pixabay.com/audio/2022/03/15/audio_8b5b8d3d65.mp3"></audio>
+<audio id="bad" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4c3d0dbf04.mp3"></audio>
+
+<script>
+
+/* BACKGROUND */
+
+const bg=document.getElementById("bg");
+const ctx=bg.getContext("2d");
+bg.width=innerWidth;
+bg.height=innerHeight;
+
+let stars=[];
+for(let i=0;i<150;i++){
+  stars.push({x:Math.random()*bg.width,y:Math.random()*bg.height,
+  r:Math.random()*2+1,dx:(Math.random()-0.5)*0.7,dy:(Math.random()-0.5)*0.7});
+}
+
+function drawBG(){
+  ctx.clearRect(0,0,bg.width,bg.height);
+  ctx.fillStyle="cyan";
+  stars.forEach(s=>{
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,6.28);
+    ctx.fill();
+    s.x+=s.dx; s.y+=s.dy;
+    if(s.x<0||s.x>bg.width) s.dx*=-1;
+    if(s.y<0||s.y>bg.height) s.dy*=-1;
+  });
+  requestAnimationFrame(drawBG);
+}
+drawBG();
+
+/* QUIZ DATA */
+
+const raw=[
+{q:"∫ x dx =",a:"x²/2 + C",w:["x³","ln x","1/x"]},
+{q:"∫ x² dx =",a:"x³/3 + C",w:["x²","3x","x"]},
+{q:"∫ sin x dx =",a:"-cos x + C",w:["cos x","sin x","x"]},
+{q:"∫ cos x dx =",a:"sin x + C",w:["tan x","-sin x","x"]},
+{q:"∫ e^x dx =",a:"e^x + C",w:["ln x","x e^x","1/e^x"]},
+{q:"∫ 1/x dx =",a:"ln|x| + C",w:["x","1/x²","e^x"]},
+{q:"∫ 3x dx =",a:"3x²/2 + C",w:["x³","6x","x"]},
+{q:"∫ 5 dx =",a:"5x + C",w:["x⁵","0","1"]},
+{q:"∫ x³ dx =",a:"x⁴/4 + C",w:["x³/3","4x","x"]},
+{q:"∫ 2e^x dx =",a:"2e^x + C",w:["e^x","2x","ln x"]}
+];
+
+function shuffle(q){
+  let arr=[q.a,...q.w].sort(()=>Math.random()-0.5);
+  return {q:q.q,a:arr,c:arr.indexOf(q.a)};
+}
+
+const qs=raw.map(shuffle);
+
+let qi=0,score=0,combo=0;
+const box=document.getElementById("quizBox");
+
+function catSay(text){
+  let s=document.getElementById("speech");
+  s.innerText=text;
+  s.style.opacity=1;
+  setTimeout(()=>s.style.opacity=0,900);
+}
+
+function loadQ(){
+  if(qi>=qs.length){finish();return;}
+
+  let q=qs[qi];
+  box.innerHTML=`
+  <div id="topBar">
+    <div>Điểm: ${score}/10<br>Combo: ${combo}</div>
+    <div style="position:relative">
+      <div id="speech"></div>
+      <div id="cat">🐱</div>
+    </div>
+  </div>
+  <h3 class="neon">${q.q}</h3>
+  `+
+  q.a.map((x,i)=>`<button class="quizBtn" onclick="ans(this,${i})">${x}</button>`).join("");
+}
+
+function ans(btn,i){
+  let cat=document.getElementById("cat");
+
+  document.querySelectorAll(".quizBtn").forEach((b,index)=>{
+    if(index==qs[qi].c) b.classList.add("correct");
+    else b.classList.add("wrong");
+    b.disabled=true;
+  });
+
+  cat.classList.remove("jump","comboJump","sad");
+
+  if(i==qs[qi].c){
+    score++;
+    combo++;
+    good.play();
+    cat.textContent="😺";
+    catSay(combo>=3?"Combo!!! 🔥":"Đúng rồi!");
+
+    if(combo>=10){
+      document.body.classList.add("shake");
+      setTimeout(()=>document.body.classList.remove("shake"),400);
+    }
+
+    if(combo>=3) cat.classList.add("comboJump");
+    else cat.classList.add("jump");
+
+  }else{
+    combo=0;
+    bad.play();
+    cat.textContent="😿";
+    cat.classList.add("sad");
+    catSay("Sai rồi...");
+  }
+
+  setTimeout(()=>{qi++;loadQ()},900);
+}
+
+/* FIREWORK */
+
+const fw=document.getElementById("fw");
+const fctx=fw.getContext("2d");
+fw.width=innerWidth;
+fw.height=innerHeight;
+let sparks=[];
+
+function fire(){
+  for(let i=0;i<120;i++){
+    sparks.push({
+      x:innerWidth/2,
+      y:innerHeight/2,
+      dx:(Math.random()-0.5)*10,
+      dy:(Math.random()-0.5)*10,
+      life:80
+    });
+  }
+}
+
+function drawFW(){
+  fctx.clearRect(0,0,fw.width,fw.height);
+  sparks.forEach(s=>{
+    fctx.fillStyle="cyan";
+    fctx.fillRect(s.x,s.y,3,3);
+    s.x+=s.dx; s.y+=s.dy;
+    s.life--;
+  });
+  sparks=sparks.filter(s=>s.life>0);
+  requestAnimationFrame(drawFW);
+}
+drawFW();
+
+/* FINISH */
+
+function finish(){
+  box.classList.add("win");
+  let t=0;
+  let show=setInterval(()=>{
+    fire();
+    t++;
+    if(t>40) clearInterval(show);
+  },200);
+
+  box.innerHTML=`
+  <h2 class="neon">🏆 CHIẾN THẮNG!</h2>
+  <h1>😸✨</h1>
+  <h3>Điểm: ${score}/10</h3>
+  `;
+}
+
+loadQ();
+
+</script>
+<script>
+document.getElementById("backBtn").onclick=function(e){
+  e.preventDefault();
+  const fade=document.getElementById("fade");
+  fade.classList.add("show");
+
+  setTimeout(()=>{
+    window.location.href="index.html";
+  },600);
+};
+</script>
+<script>
+const introMsg="MATH QUIZ LOADING...";
+let ii=0;
+
+function typeIntro(){
+  if(ii<introMsg.length){
+    document.getElementById("introText").innerHTML+=introMsg.charAt(ii);
+    ii++;
+    setTimeout(typeIntro,60);
+  }
+}
+
+typeIntro();
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Ứng dụng Toán học</title>
+
+<style>
+body{
+  margin:0;
+  background:#020617;
+  color:white;
+  font-family:Arial;
+  overflow-x:hidden;
+  font-size:20px; /* tăng chữ */
+  line-height:1.7;
+}
+
+/* INTRO */
+#intro{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+  animation:fadeOut 2s 2.5s forwards;
+}
+
+#intro h1{
+  font-size:48px;
+  color:cyan;
+  text-shadow:0 0 25px cyan;
+  animation:zoom 2s ease;
+}
+
+@keyframes zoom{
+  from{transform:scale(0.4);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+@keyframes fadeOut{
+  to{opacity:0;visibility:hidden}
+}
+
+/* PARTICLES */
+#particles{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+
+/* HEADER */
+header{
+  text-align:center;
+  padding:60px 20px;
+}
+
+header p{
+  font-size:22px;
+  opacity:0.9;
+}
+
+.neon{
+  color:#00ffff;
+  text-shadow:0 0 15px cyan;
+  font-size:34px;
+}
+
+/* SECTION CARD */
+
+.section{
+  background:#0b0f2a;
+  margin:40px auto;
+  padding:40px;
+  width:85%;
+  border-radius:18px;
+  box-shadow:0 0 20px cyan;
+  transition:0.5s;
+  opacity:0;
+  transform:translateY(40px) scale(0.98);
+}
+
+.section h2{
+  font-size:30px;
+  margin-bottom:10px;
+}
+
+.section.show{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+
+.section:hover{
+  transform:translateY(-12px) scale(1.04);
+  box-shadow:0 0 60px cyan;
+}
+
+/* BACK BUTTON */
+
+.back{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:black;
+  color:cyan;
+  border:1px solid cyan;
+  padding:14px 22px;
+  font-size:18px;
+  border-radius:10px;
+  cursor:pointer;
+  box-shadow:0 0 10px cyan;
+  transition:0.3s;
+}
+
+.back:hover{
+  background:cyan;
+  color:black;
+  transform:scale(1.1);
+}
+.line{
+  opacity:0;
+  transform:translateY(20px);
+  transition:0.8s ease;
+}
+
+.line.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="intro">
+<h1 id="typing"></h1>
+</div>
+
+<canvas id="particles"></canvas>
+<button class="back" onclick="goHome()">⬅ Trang chính</button>
+
+<header>
+<h1 class="neon">🚀 Ứng dụng Toán học trong đời sống</h1>
+<p>
+<span class="line">Toán học không chỉ tồn tại trong sách giáo khoa.</span><br>
+<span class="line">Nó vận hành mọi hệ thống hiện đại và</span><br>
+<span class="line">là nền tảng của thế giới công nghệ.</span><br>
+<span class="line">Hiểu Toán là hiểu cách thế giới hoạt động.</span>
+</p>
+
+</header>
+
+<div class="section">
+<h2 class="neon">📱 Toán trong Công nghệ</h2>
+<p>
+Mỗi thiết bị điện tử chúng ta sử dụng hàng ngày
+đều vận hành dựa trên các mô hình toán học.
+Thuật toán xử lý hình ảnh giúp camera nhận diện khuôn mặt.
+Mã hóa bảo vệ dữ liệu ngân hàng và tài khoản cá nhân.
+Các trò chơi điện tử sử dụng hình học không gian
+để tạo chuyển động mượt mà và chân thực.
+Không có Toán học,
+internet và smartphone sẽ không thể tồn tại.
+</p>
+</div>
+
+<div class="section">
+<h2 class="neon">🤖 Toán trong AI & Robot</h2>
+<p>
+Trí tuệ nhân tạo học từ dữ liệu bằng
+ma trận, xác suất và giải tích.
+Các mô hình AI dự đoán hành vi,
+dịch ngôn ngữ và nhận diện giọng nói.
+Robot dùng vectơ và hệ tọa độ
+để định vị trong không gian.
+Nhờ Toán học,
+máy móc có thể “học” và ra quyết định
+giống con người.
+</p>
+</div>
+
+<div class="section">
+<h2 class="neon">🏗 Toán trong Kiến trúc & Kỹ thuật</h2>
+<p>
+Kỹ sư sử dụng phương trình để tính lực,
+độ bền vật liệu và kết cấu.
+Mọi cây cầu và tòa nhà cao tầng
+đều dựa trên mô hình toán học chính xác.
+Toán đảm bảo công trình an toàn,
+tiết kiệm chi phí và bền vững theo thời gian.
+Một sai số nhỏ có thể dẫn đến thảm họa,
+vì vậy Toán là trái tim của kỹ thuật.
+</p>
+</div>
+
+<div class="section">
+<h2 class="neon">🌌 Toán trong Khoa học & Vũ trụ</h2>
+<p>
+Toán học mô tả chuyển động của hành tinh,
+quỹ đạo vệ tinh và hố đen.
+Các nhà khoa học dùng phương trình
+để khám phá nguồn gốc vũ trụ.
+NASA tính toán từng milimet
+để tàu vũ trụ hạ cánh chính xác.
+Nhờ Toán,
+con người có thể chạm tới những điều
+vượt xa Trái Đất.
+</p>
+</div>
+
+<button class="back" onclick="history.back()">⬅ Quay lại</button>
+
+<script>
+
+/* INTRO TYPE */
+const text="ỨNG DỤNG TOÁN HỌC";
+let i=0;
+function type(){
+  if(i<text.length){
+    typing.innerHTML+=text.charAt(i);
+    i++;
+    setTimeout(type,70);
+  }
+}
+type();
+
+/* GALAXY PARTICLES */
+
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+}
+resize();
+onresize=resize;
+
+let stars=[];
+
+for(let i=0;i<200;i++){
+  stars.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*2,
+    speed:Math.random()*1+0.2
+  });
+}
+
+function draw(){
+  ctx.fillStyle="rgba(2,6,23,0.4)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  stars.forEach(s=>{
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle="cyan";
+    ctx.fill();
+
+    s.y+=s.speed;
+
+    if(s.y>canvas.height){
+      s.y=0;
+      s.x=Math.random()*canvas.width;
+    }
+  });
+
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* SCROLL REVEAL SECTION */
+
+const sectionObserver=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add("show");
+  });
+});
+document.querySelectorAll(".section").forEach(el=>sectionObserver.observe(el));
+
+/* LINE BY LINE TEXT */
+
+const lineObserver=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      let lines=e.target.querySelectorAll(".line");
+      lines.forEach((l,i)=>{
+        setTimeout(()=>l.classList.add("show"),i*200);
+      });
+    }
+  });
+});
+
+document.querySelectorAll(".section").forEach(el=>lineObserver.observe(el));
+function goHome(){
+  document.body.style.opacity="0";
+  document.body.style.transition="0.6s";
+  setTimeout(()=>window.location="index.html",600);
+}
+
+</script>
+
+
+</body>
+</html>
+
+
