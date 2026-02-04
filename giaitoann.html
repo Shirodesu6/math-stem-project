@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STEM Math Solver | Neural Terminal</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/nerdamer.core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/Algebra.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/Calculus.js"></script>
+    
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Fira+Code&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --neon-blue: #00f3ff; --neon-pink: #ff00ff; --bg-black: #050508; }
+        
+        body {
+            background: var(--bg-black);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            background-image: linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: rgba(10, 15, 25, 0.95);
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            padding: 35px;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .header-title {
+            text-align: center;
+            letter-spacing: 6px;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            border-bottom: 1px solid #222;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .input-area {
+            width: 100%;
+            padding: 18px;
+            background: #000;
+            border: 1px solid #333;
+            border-left: 5px solid var(--neon-pink);
+            color: var(--neon-blue);
+            font-family: 'Fira Code', monospace;
+            font-size: 1.3rem;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .grid-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .cyber-btn {
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 15px;
+            font-family: 'Orbitron';
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s ease;
+        }
+
+        .cyber-btn:hover {
+            background: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        .btn-magenta { border-color: var(--neon-pink); color: var(--neon-pink); }
+        .btn-magenta:hover { background: var(--neon-pink); color: #000; box-shadow: 0 0 20px var(--neon-pink); }
+
+        .log-screen {
+            background: rgba(0,0,0,0.8);
+            border: 1px solid #222;
+            padding: 20px;
+            min-height: 200px;
+            font-family: 'Fira Code', monospace;
+            border-radius: 4px;
+        }
+
+        .step-info { color: #666; font-size: 0.85rem; margin-bottom: 8px; }
+        .math-output {
+            margin-top: 15px;
+            font-size: 1.7rem;
+            color: #fff;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 4px;
+        }
+        
+        .bounds-container { display: flex; gap: 15px; margin-top: 15px; }
+        .bound-input { width: 100%; padding: 10px; background: #0a0a0a; border: 1px solid #333; color: #fff; outline: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="header-title">Stem Math Neural System</h2>
+
+    <div style="margin-bottom: 15px;">
+        <label style="color: var(--neon-pink); font-size: 10px;">> ACCESSING_CORE_FUNCTION...</label>
+        <input type="text" id="userInput" class="input-area" placeholder="Nhập hàm số (vd: x^2 + sin(x))">
+    </div>
+
+    <div class="bounds-container">
+        <input type="number" id="lowerBound" class="bound-input" placeholder="Cận dưới a">
+        <input type="number" id="upperBound" class="bound-input" placeholder="Cận trên b">
+    </div>
+
+    <div class="grid-buttons">
+        <button class="cyber-btn btn-magenta" onclick="calculate('diff')">Đạo Hàm</button>
+        <button class="cyber-btn btn-magenta" onclick="calculate('int')">Nguyên Hàm</button>
+        <button class="cyber-btn" onclick="calculate('def')">Tích Phân XĐ</button>
+    </div>
+
+    <div class="log-screen">
+        <div id="step-logs"></div>
+        <div id="math-result" class="math-output"></div>
+    </div>
+</div>
+
+<script>
+    function writeLog(msg) {
+        const log = document.getElementById('step-logs');
+        log.innerHTML += `<div class="step-info">> ${msg}</div>`;
+    }
+
+    async function calculate(mode) {
+        const input = document.getElementById('userInput').value.trim();
+        const resBox = document.getElementById('math-result');
+        const log = document.getElementById('step-logs');
+        
+        log.innerHTML = "";
+        resBox.innerHTML = "";
+
+        if(!input) {
+            writeLog("ERROR: NULL_INPUT_DETECTED");
+            return;
+        }
+
+        try {
+            writeLog("Khởi động hệ máy tính Neural...");
+            // Chuẩn hóa tự động thêm dấu nhân: 2x -> 2*x
+            let expression = input.replace(/(\d)([a-zA-Z\(])/g, '$1*$2');
+            writeLog(`Hàm số xác nhận: \\( f(x) = ${expression} \\)`);
+
+            if (mode === 'diff') {
+                writeLog("Áp dụng quy tắc đạo hàm chuỗi (Chain Rule)...");
+                let sol = nerdamer(`diff(${expression}, x)`);
+                writeLog("Tối giản biểu thức đầu ra...");
+                resBox.innerHTML = `f'(x) = \\[ ${sol.toTeX()} \\]`;
+            } 
+            else if (mode === 'int') {
+                writeLog("Phân tích cấu trúc nguyên hàm...");
+                writeLog("Áp dụng tích phân ký hiệu (Symbolic Integration)...");
+                let sol = nerdamer(`integrate(${expression}, x)`);
+                resBox.innerHTML = `∫ f(x) dx = \\[ ${sol.toTeX()} + C \\]`;
+            } 
+            else if (mode === 'def') {
+                let a = document.getElementById('lowerBound').value;
+                let b = document.getElementById('upperBound').value;
+                if(a === "" || b === "") throw new Error("RANGE_NOT_DEFINED");
+                
+                writeLog(`Tính tích phân xác định từ ${a} đến ${b}...`);
+                let val = nerdamer(`defint(${expression}, ${a}, ${b}, x)`).evaluate().toString();
+                resBox.innerHTML = `Kết quả: \\[ ${val} \\]`;
+            }
+
+            // Gọi MathJax render lại giao diện công thức
+            await MathJax.typesetPromise();
+            writeLog("TRUY XUẤT THÀNH CÔNG.");
+
+        } catch (e) {
+            writeLog(`HỆ THỐNG LỖI: ${e.message}`);
+            resBox.innerHTML = "SYSTEM_FAILURE";
+        }
+    }
+</script>
+
+</body>
+</html>
